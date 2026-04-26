@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بنك الأسئلة الاستنتاجية الشامل | منصة نوفل</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0f172a; 
+            --secondary-color: #2563eb; 
+            --accent-color: #f59e0b; 
+            --success-color: #059669; 
+            --danger-color: #dc2626;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-light: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            padding-bottom: 50px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            background-color: var(--card-bg);
+            padding: 40px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            border-bottom: 5px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--danger-color);
+            color: #fff;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 34px;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        header h2 {
+            color: var(--text-light);
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        /* أزرار التبديل بين التاريخ والجغرافيا */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            padding: 12px 35px;
+            font-size: 19px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .tab-btn:hover {
+            background-color: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active-history {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+        }
+
+        .tab-btn.active-geo {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4);
+        }
+
+        /* حاوية الأسئلة */
+        .subject-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .subject-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* بطاقة السؤال */
+        .question-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border-right: 6px solid var(--secondary-color);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .question-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        .geo-border { border-right-color: var(--success-color); }
+
+        .question-text {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            line-height: 1.6;
+        }
+
+        .q-icon {
+            color: var(--accent-color);
+            font-size: 26px;
+        }
+
+        .reveal-btn {
+            background-color: #f8fafc;
+            color: var(--secondary-color);
+            border: 2px dashed var(--secondary-color);
+            padding: 10px 25px;
+            font-size: 17px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .geo-btn {
+            color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .reveal-btn:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            border-style: solid;
+        }
+
+        .geo-btn:hover {
+            background-color: var(--success-color);
+            color: white;
+            border-style: solid;
+        }
+
+        /* الإجابة المخفية */
+        .answer-box {
+            display: none;
+            margin-top: 20px;
+            padding: 20px 25px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 18px;
+            color: #334155;
+            line-height: 2;
+        }
+
+        .answer-box ul {
+            padding-right: 25px;
+            margin-top: 10px;
+        }
+
+        .answer-box li {
+            margin-bottom: 10px;
+        }
+
+        .answer-box li strong {
+            color: var(--primary-color);
+        }
+
+        .answer-box.show {
+            display: block;
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: var(--text-light);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .highlight-badge {
+            background: #fef3c7;
+            color: #d97706;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="badge">الفصل الأول كاملاً</div>
+            <h1>بنك الأسئلة الاستنتاجية (الفهم)</h1>
+            <h2>مادتي التاريخ والجغرافيا | تدريب مكثف لطلبة منصة نوفل للحصول على العلامة الكاملة</h2>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active-history" onclick="switchTab('history', this, 'active-history')">التاريخ (الحرب الباردة والنظام الدولي)</button>
+            <button class="tab-btn" onclick="switchTab('geography', this, 'active-geo')">الجغرافيا (واقع الاقتصاد والعولمة)</button>
+        </div>
+
+        <div id="history" class="subject-section active">
+            
+            <div class="question-card">
+                <div class="question-text">
+                    <span class="q-icon">💡</span>
+                    <span>ما هي العلاقة الخفية بين "الحرب الباردة" وتصاعد "حركات التحرر" في العالم الثالث؟ <span class="highlight-badge">مهم جداً</span></span>
+                </div>
+                <button class="reveal-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li><strong>دعم المعسكرين لحركات التحرر:</strong> دعم الاتحاد السوفياتي حركات التحرر بهدف إضعاف الدول الاستعمارية الرأسمالية (فرنسا وبريطانيا) ونشر الشيوعية في هذه الدول بعد استقلالها.</li>
+                        <li><strong>استغلال الفراغ:</strong> سعت الولايات المتحدة لدعم استقلال بعض الدول لملء الفراغ الذي تركته الاستعمارات التقليدية المنهارة.</li>
+                        <li><strong>تحول العالم الثالث لمسرح صراع:</strong> استفادت حركات التحرر من التنافس بين المعسكرين للحصول على السلاح والدعم الدبلوماسي (مثل دعم السوفيات للثورة الجزائرية والفيتنامية).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">
+                    <span class="q-icon">💡</span>
+                    لماذا لجأت الولايات المتحدة الأمريكية إلى المشاريع الاقتصادية (مشروع مارشال) كأداة للمواجهة بدلاً من السلاح؟
+                </div>
+                <button class="reveal-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الأهداف الخفية والاستنتاج:</strong>
+                    <ul>
+                        <li>تطويق الشيوعية ومنع زحفها نحو أوروبا الغربية، لأن الفقر والدمار الذي خلفته الحرب العالمية الثانية كان بيئة خصبة لانتشار الفكر الشيوعي.</li>
+                        <li>ربط اقتصاديات الدول الأوروبية بالاقتصاد الأمريكي وتكريس التبعية لها.</li>
+                        <li>إنقاذ الشركات الأمريكية من الإفلاس بفتح أسواق جديدة لها في أوروبا المدمرة.</li>
+                        <li><strong>الخلاصة:</strong> كان "الدولار" السلاح الأنجع لاحتواء الشعوب المنهكة دون الدخول في حرب عسكرية مباشرة قد تؤدي لدمار نووي.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">
+                    <span class="q-icon">💡</span>
+                    ما هو التغير الجوهري الذي طرأ على اهتمامات "حركة عدم الانحياز" بعد مؤتمر الجزائر 1973؟ ولماذا؟
+                </div>
+                <button class="reveal-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li><strong>التحول:</strong> انتقلت الحركة من المطالبة بالاستقلال السياسي والدفاع عن التعايش السلمي، إلى <strong>المطالبة بالاستقلال الاقتصادي</strong> والدعوة لإقامة "نظام اقتصادي عالمي جديد".</li>
+                        <li><strong>السبب:</strong> إدراك قادة العالم الثالث أن الاستقلال السياسي يبقى شكلياً وناقصاً إذا لم يرافقه تحرر اقتصادي من هيمنة شركات وشرط الشمال، ومطالبتهم باسترجاع سيادتهم على ثرواتهم (تأميم الثروات).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">
+                    <span class="q-icon">💡</span>
+                    كيف ساهمت أزمة "السويس 1956" (العدوان الثلاثي على مصر) في تغيير خارطة النفوذ في الشرق الأوسط؟
+                </div>
+                <button class="reveal-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li>أعلنت هذه الأزمة <strong>النهاية الفعلية للاستعمار التقليدي</strong> (تراجع دور فرنسا وبريطانيا كقوى عظمى).</li>
+                        <li>دخول المعسكرين (الولايات المتحدة والاتحاد السوفياتي) بقوة إلى المنطقة (بروز سياسة ملء الفراغ الأمريكية عبر مشروع أيزنهاور 1957).</li>
+                        <li>تكريس المنطقة كإحدى أهم بؤر التوتر في الحرب الباردة بسبب موقعها الاستراتيجي وثروتها النفطية.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">
+                    <span class="q-icon">💡</span>
+                    <span>رغم ترسانته العسكرية والنووية الضخمة، لماذا انهار المعسكر الشرقي من الداخل؟ <span class="highlight-badge">سؤال متكرر</span></span>
+                </div>
+                <button class="reveal-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li><strong>الضعف الاقتصادي:</strong> توجيه معظم ميزانية الدولة نحو التسلح ودعم حركات التحرر وحلفاء السوفيات، على حساب التنمية الاجتماعية وتوفير المواد الاستهلاكية للشعب.</li>
+                        <li><strong>فشل النظام الاشتراكي:</strong> التخطيط المركزي أدى للبيروقراطية، وقتل روح المبادرة الفردية والركود الاقتصادي.</li>
+                        <li><strong>غياب الديمقراطية:</strong> الكبت السياسي وحكم الحزب الواحد ولّد احتقاناً شعبياً في أوروبا الشرقية.</li>
+                        <li><strong>دور غورباتشوف:</strong> إصلاحاته المتسرعة (البريسترويكا والغلاسنوست) أدت إلى تسريع انهيار الاتحاد السوفياتي بدلاً من إصلاحه.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-text">
+                    <span class="q-icon">💡</span>
+                    ما هي الانعكاسات الحقيقية لـ "النظام الدولي الجديد" (الأحادية القطبية) على دول العالم الثالث؟
+                </div>
+                <button class="reveal-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li><strong>فقدان التوازن:</strong> زوال الدعم السوفياتي جعل دول العالم الثالث تواجه الضغوط الأمريكية منفردة.</li>
+                        <li><strong>التدخل في الشؤون الداخلية:</strong> استغلال أمريكا لهيئة الأمم المتحدة للتدخل العسكري بحجج مثل "محاربة الإرهاب" أو "حماية حقوق الإنسان" (العراق، أفغانستان).</li>
+                        <li><strong>الهيمنة الاقتصادية:</strong> إجبار دول الجنوب على فتح أسواقها وخصخصة شركاتها عبر صندوق النقد الدولي ومنظمة التجارة العالمية.</li>
+                        <li><strong>التهميش:</strong> تراجع دور حركة عدم الانحياز لفقدانها مبرر التوازن بين كتلتين.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="geography" class="subject-section">
+            
+            <div class="question-card geo-border">
+                <div class="question-text">
+                    <span class="q-icon">🌍</span>
+                    <span>ما هو التفسير الاقتصادي لمفارقة التخلف: "دول غنية بالموارد الطبيعية، وشعوب تعاني الفقر والديون"؟ <span class="highlight-badge">شامل</span></span>
+                </div>
+                <button class="reveal-btn geo-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li><strong>غياب الصناعة التحويلية:</strong> دول الجنوب تكتفي بتصدير مواردها كمواد خام بأسعار زهيدة، ثم تستوردها مصنّعة بأسعار باهظة (تبادل تجاري غير متكافئ).</li>
+                        <li><strong>الاقتصاد الريعي:</strong> الاعتماد على مورد واحد (كالبترول) يجعل الاقتصاد هشاً وخاضعاً لتقلبات أسعار البورصات العالمية التي يتحكم فيها الشمال.</li>
+                        <li><strong>نهب الشركات الأجنبية:</strong> الشركات متعددة الجنسيات تستثمر لاستنزاف الثروات وتحويل الأرباح للخارج دون إحداث تنمية محلية فعلية.</li>
+                        <li><strong>الديون:</strong> الفوائد المركبة للديون تبتلع عائدات التصدير وتمنع الاستثمار في قطاعات التعليم والصحة.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="question-card geo-border">
+                <div class="question-text">
+                    <span class="q-icon">🌍</span>
+                    رغم امتلاك دول الجنوب لأوسع الأراضي الزراعية، لماذا تعاني من "الفجوة الغذائية" وتعتمد على استيراد القمح من الشمال؟
+                </div>
+                <button class="reveal-btn geo-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li><strong>المحاصيل النقدية (التجارية):</strong> توجيه الزراعة في الجنوب نحو زراعة المحاصيل الموجهة للتصدير (البن، الكاكاو، القطن، المطاط) لخدمة مصانع الشمال، على حساب زراعة المحاصيل المعاشية الأساسية (القمح، الأرز).</li>
+                        <li><strong>نقص التكنولوجيا:</strong> ضعف استخدام المكننة الزراعية والأسمدة وتقنيات الري الحديثة.</li>
+                        <li><strong>الزحف العمراني:</strong> البناء على الأراضي الزراعية الخصبة والانفجار الديمغرافي الذي يفوق معدل الإنتاج الزراعي.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="question-card geo-border">
+                <div class="question-text">
+                    <span class="q-icon">🌍</span>
+                    كيف يُستخدم "الغذاء" و "التكنولوجيا" كأسلحة استراتيجية (أداة ضغط) في العلاقات الدولية المعاصرة؟
+                </div>
+                <button class="reveal-btn geo-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li><strong>السلاح الأخضر (الغذاء):</strong> تحتكر دول الشمال (خاصة أمريكا وكندا) صادرات القمح العالمية، وتستخدمه كورقة ضغط سياسي ضد دول الجنوب المحتاجة، لإجبارها على تقديم تنازلات سياسية أو اقتصادية (من لا يملك غذاءه لا يملك قراره).</li>
+                        <li><strong>التكنولوجيا:</strong> يرفض الشمال نقل التكنولوجيا الحساسة للجنوب (احتكار المعرفة)، ويعمل على استقطاب العقول (هجرة الأدمغة)، ليبقى الجنوب مجرد سوق مستهلك للمنتجات التكنولوجية الغربية، مما يكرس التبعية.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="question-card geo-border">
+                <div class="question-text">
+                    <span class="q-icon">🌍</span>
+                    كيف تؤثر "البورصات العالمية" المتواجدة في الشمال (وول ستريت، لندن) على سيادة دول الجنوب على ثرواتها؟
+                </div>
+                <button class="reveal-btn geo-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li>رغم أن دول الجنوب هي المنتجة للثروات (النفط، الغاز، المعادن)، إلا أن <strong>أسعارها تتحدد في بورصات الشمال</strong>.</li>
+                        <li>الشركات الكبرى والمضاربون في هذه البورصات يتحكمون في قانون العرض والطلب لخفض أسعار المواد الخام ورفع أسعار المواد المصنعة.</li>
+                        <li>هذا يجعل دول الجنوب تفقد السيادة الحقيقية على ثرواتها، وتصبح ميزانياتها ومشاريعها التنموية مرهونة بأرقام الشاشات في نيويورك أو لندن.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="question-card geo-border">
+                <div class="question-text">
+                    <span class="q-icon">🌍</span>
+                    استخلص الانعكاسات السلبية (المخفية) لظاهرة "العولمة" على اقتصادات وثقافات الدول النامية؟
+                </div>
+                <button class="reveal-btn geo-btn" onclick="toggleAnswer(this)">عرض الإجابة الاستنتاجية 👁️</button>
+                <div class="answer-box">
+                    <strong>الاستنتاج:</strong>
+                    <ul>
+                        <li><strong>اقتصادياً:</strong> تدمير الصناعات المحلية الناشئة لعدم قدرتها على منافسة منتجات الشركات متعددة الجنسيات الرخيصة وعالية الجودة، مما يؤدي لغلق المصانع وتسريح العمال (البطالة).</li>
+                        <li><strong>سياسياً:</strong> تآكل السيادة الوطنية حيث أصبحت قرارات الدول خاضعة لإملاءات صندوق النقد ومنظمة التجارة العالمية.</li>
+                        <li><strong>ثقافياً (الأمركة):</strong> الغزو الثقافي وطمس الهويات الوطنية، نشر النمط الاستهلاكي الغربي، والقضاء على العادات والتقاليد المحلية عبر الفضائيات والإنترنت.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            تم التصميم والبرمجة باحترافية من طرف <strong>منصة نوفل</strong> | نحو التفوق في شهادة البكالوريا
+        </footer>
+
+    </div>
+
+    <script>
+        // دالة التبديل بين المواد (التاريخ / الجغرافيا)
+        function switchTab(subjectId, btnElement, activeClass) {
+            // إخفاء كل الأقسام
+            document.querySelectorAll('.subject-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            // إزالة حالة "النشط" من كل الأزرار
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active-history');
+                btn.classList.remove('active-geo');
+            });
+
+            // إظهار القسم المحدد وتنشيط زره باللون المناسب
+            document.getElementById(subjectId).classList.add('active');
+            btnElement.classList.add(activeClass);
+        }
+
+        // دالة إظهار/إخفاء الإجابة
+        function toggleAnswer(btnElement) {
+            // الوصول إلى الحاوية التي تلي الزر (صندوق الإجابة)
+            const answerBox = btnElement.nextElementSibling;
+            
+            if (answerBox.classList.contains('show')) {
+                answerBox.classList.remove('show');
+                btnElement.innerHTML = "عرض الإجابة الاستنتاجية 👁️";
+            } else {
+                answerBox.classList.add('show');
+                btnElement.innerHTML = "إخفاء الإجابة ❌";
+            }
+        }
+    </script>
+</body>
+</html>
